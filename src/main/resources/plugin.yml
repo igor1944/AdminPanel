@@ -1,0 +1,69 @@
+name: AdminPanel
+version: '${project.version}'
+main: ru.example.adminpanel.AdminPanelPlugin
+api-version: '1.18'
+description: GUI-панель администратора, управление игроками, сервером и серверными событиями.
+authors: [example]
+
+commands:
+  adminpanel:
+    description: Панель администратора.
+    usage: /<command> [reload | event <start <id> | stop | list> | broadcast <текст> | help]
+    aliases: [apanel, ap]
+
+permissions:
+  adminpanel.*:
+    description: Полный доступ ко всем возможностям AdminPanel.
+    default: op
+    children:
+      adminpanel.use: true
+      adminpanel.reload: true
+      adminpanel.event: true
+      adminpanel.action.*: true
+
+  adminpanel.action.*:
+    description: Доступ ко всем административным действиям.
+    default: op
+    children:
+      adminpanel.action.heal: true
+      adminpanel.action.feed: true
+      adminpanel.action.fly: true
+      adminpanel.action.gamemode: true
+      adminpanel.action.teleport: true
+      adminpanel.action.weather: true
+      adminpanel.action.time: true
+      adminpanel.action.broadcast: true
+
+  adminpanel.use:
+    description: Открытие панели администратора (/adminpanel) и использование меню.
+    default: op
+  adminpanel.reload:
+    description: Перезагрузка конфигурации плагина (/adminpanel reload).
+    default: op
+  adminpanel.event:
+    description: Запуск и остановка серверных событий (/adminpanel event ...).
+    default: op
+  adminpanel.action.heal:
+    description: Восстановление здоровья себе и другим игрокам.
+    default: op
+  adminpanel.action.feed:
+    description: Восстановление голода себе и другим игрокам.
+    default: op
+  adminpanel.action.fly:
+    description: Включение и выключение полёта.
+    default: op
+  adminpanel.action.gamemode:
+    description: Смена игрового режима.
+    default: op
+  adminpanel.action.teleport:
+    description: Телепортация к игроку и телепортация игрока к себе.
+    default: op
+  adminpanel.action.weather:
+    description: Изменение погоды в управляемых мирах.
+    default: op
+  adminpanel.action.time:
+    description: Установка дня или ночи в управляемых мирах.
+    default: op
+  adminpanel.action.broadcast:
+    description: Отправка объявления всем игрокам (/adminpanel broadcast).
+    default: op

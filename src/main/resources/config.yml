@@ -1,0 +1,511 @@
+# ================================================================
+#  AdminPanel — конфигурация
+#  Цветовые коды: &a, &c, &l ... а также HEX-цвета в формате &#RRGGBB
+#  После изменения файла выполните: /adminpanel reload
+#  При ошибке в значении плагин использует безопасное значение
+#  по умолчанию и пишет предупреждение в консоль.
+# ================================================================
+
+# Язык сообщений: секция messages.<язык>. Доступны: ru, en.
+# Если секции выбранного языка нет, используется ru.
+language: ru
+
+# Писать в консоль каждое административное действие (аудит).
+log-actions: true
+
+# ----------------------------------------------------------------
+#  Управление сервером: время и погода
+# ----------------------------------------------------------------
+server-control:
+  # Миры, к которым применяются время и погода.
+  # Пустой список [] — все обычные (NORMAL) миры сервера.
+  worlds:
+    - world
+  # Время в тиках (0-23999): 1000 — утро, 6000 — полдень, 13000 — ночь, 18000 — полночь.
+  day-time: 1000
+  night-time: 13000
+  # Сколько секунд держится установленная погода (1-86400).
+  weather-duration: 600
+
+# ----------------------------------------------------------------
+#  GUI
+# ----------------------------------------------------------------
+gui:
+  # Защита от случайных двойных кликов (миллисекунды, 0 — выключено).
+  click-cooldown-ms: 250
+  # Строка, добавляемая к описанию кнопки, если у администратора нет права на действие.
+  no-access-lore: "&c✖ Недостаточно прав"
+  sounds:
+    enabled: true
+    click: UI_BUTTON_CLICK
+    deny: ENTITY_VILLAGER_NO
+    volume: 0.7
+    pitch: 1.0
+
+# ----------------------------------------------------------------
+#  Меню. У каждой кнопки:
+#    enabled  — показывать ли кнопку (true/false)
+#    slot     — номер слота (0..size-1)
+#    material — материал предмета (см. Material в Bukkit API)
+#    name     — название
+#    lore     — описание (список строк)
+#    glow     — эффект свечения
+#  Действие кнопки определяется её ключом (heal, feed, ...), а НЕ названием.
+#  Чтобы скрыть кнопку, поставьте enabled: false (не удаляйте секцию —
+#  удалённая секция будет восстановлена значениями по умолчанию).
+# ----------------------------------------------------------------
+menus:
+  # ------------------------- Главное меню -------------------------
+  # Плейсхолдеры заголовка: {page}, {pages}, {online}
+  main:
+    title: "&4&lАдмин-панель &8| &7стр. {page}/{pages}"
+    # Размер: 27, 36, 45 или 54 слота.
+    size: 54
+    filler:
+      enabled: true
+      material: GRAY_STAINED_GLASS_PANE
+    # Слоты для голов игроков онлайн. Можно указывать числа и диапазоны "18-44".
+    player-slots:
+      - "18-44"
+    # Шаблон головы игрока. Плейсхолдеры: {player}, {health}, {max_health}, {food},
+    # {gamemode}, {world}, {ping}, {fly}
+    player-head:
+      name: "&e{player}"
+      lore:
+        - "&7Здоровье: &c{health}&7/&c{max_health}"
+        - "&7Голод: &6{food}&7/&620"
+        - "&7Режим: &b{gamemode}"
+        - "&7Мир: &a{world}"
+        - "&7Пинг: &f{ping} мс"
+        - ""
+        - "&eНажмите, чтобы открыть меню игрока"
+    buttons:
+      # --- Раздел администратора (действия над собой) ---
+      admin-section:
+        enabled: true
+        slot: 0
+        material: NETHER_STAR
+        name: "&c&lРаздел администратора"
+        lore:
+          - "&7Действия над собой"
+      heal:
+        enabled: true
+        slot: 2
+        material: GOLDEN_APPLE
+        name: "&aВосстановить здоровье"
+        lore:
+          - "&7Полностью восстанавливает здоровье"
+          - "&7и тушит огонь."
+      feed:
+        enabled: true
+        slot: 3
+        material: COOKED_BEEF
+        name: "&6Восстановить голод"
+        lore:
+          - "&7Полностью восстанавливает сытость."
+      fly:
+        enabled: true
+        slot: 4
+        material: FEATHER
+        name: "&bПолёт: {fly}"
+        lore:
+          - "&7Включить или выключить полёт."
+      gamemode:
+        enabled: true
+        slot: 5
+        material: DIAMOND_SWORD
+        name: "&dИгровой режим"
+        lore:
+          - "&7Текущий: &f{gamemode}"
+          - "&eНажмите, чтобы выбрать режим"
+      # --- Раздел управления сервером ---
+      server-section:
+        enabled: true
+        slot: 9
+        material: COMPARATOR
+        name: "&9&lУправление сервером"
+        lore:
+          - "&7Миры: &f{worlds}"
+      time-day:
+        enabled: true
+        slot: 11
+        material: SUNFLOWER
+        name: "&eУстановить день"
+        lore:
+          - "&7Применяется к мирам: &f{worlds}"
+      time-night:
+        enabled: true
+        slot: 12
+        material: CLOCK
+        name: "&1Установить ночь"
+        lore:
+          - "&7Применяется к мирам: &f{worlds}"
+      weather-clear:
+        enabled: true
+        slot: 14
+        material: LIGHT_BLUE_DYE
+        name: "&bЯсная погода"
+        lore:
+          - "&7Применяется к мирам: &f{worlds}"
+      weather-rain:
+        enabled: true
+        slot: 15
+        material: WATER_BUCKET
+        name: "&3Дождь"
+        lore:
+          - "&7Применяется к мирам: &f{worlds}"
+      weather-thunder:
+        enabled: true
+        slot: 16
+        material: TRIDENT
+        name: "&8Гроза"
+        lore:
+          - "&7Применяется к мирам: &f{worlds}"
+      # --- Навигация ---
+      previous-page:
+        enabled: true
+        slot: 45
+        material: ARROW
+        name: "&e← Предыдущая страница"
+        lore:
+          - "&7Страница {page}/{pages}"
+      players-info:
+        enabled: true
+        slot: 48
+        material: PLAYER_HEAD
+        name: "&a&lИгроки онлайн: &f{online}"
+        lore:
+          - "&7Страница {page}/{pages}"
+          - "&7Нажмите на голову игрока,"
+          - "&7чтобы управлять им."
+      close:
+        enabled: true
+        slot: 49
+        material: BARRIER
+        name: "&cЗакрыть"
+        lore: []
+      refresh:
+        enabled: true
+        slot: 50
+        material: LIME_DYE
+        name: "&aОбновить"
+        lore:
+          - "&7Обновить список игроков"
+      next-page:
+        enabled: true
+        slot: 53
+        material: ARROW
+        name: "&eСледующая страница →"
+        lore:
+          - "&7Страница {page}/{pages}"
+
+  # ------------------------- Меню игрока -------------------------
+  # Плейсхолдеры (заголовок и кнопки): {player}, {health}, {max_health}, {food},
+  # {gamemode}, {world}, {ping}, {fly}
+  player:
+    title: "&8Игрок: &0{player}"
+    size: 27
+    filler:
+      enabled: true
+      material: BLACK_STAINED_GLASS_PANE
+    buttons:
+      target-info:
+        enabled: true
+        slot: 4
+        material: PLAYER_HEAD
+        name: "&e&l{player}"
+        lore:
+          - "&7Здоровье: &c{health}&7/&c{max_health}"
+          - "&7Голод: &6{food}&7/&620"
+          - "&7Режим: &b{gamemode}"
+          - "&7Полёт: {fly}"
+          - "&7Мир: &a{world}"
+          - "&7Пинг: &f{ping} мс"
+      teleport-to:
+        enabled: true
+        slot: 10
+        material: ENDER_PEARL
+        name: "&dТелепортироваться к игроку"
+        lore:
+          - "&7Переместиться к &f{player}"
+      teleport-here:
+        enabled: true
+        slot: 11
+        material: ENDER_EYE
+        name: "&5Телепортировать к себе"
+        lore:
+          - "&7Переместить &f{player} &7к вам"
+      heal:
+        enabled: true
+        slot: 13
+        material: GOLDEN_APPLE
+        name: "&aВылечить игрока"
+        lore:
+          - "&7Восстановить здоровье &f{player}"
+      feed:
+        enabled: true
+        slot: 14
+        material: COOKED_BEEF
+        name: "&6Накормить игрока"
+        lore:
+          - "&7Восстановить голод &f{player}"
+      fly:
+        enabled: true
+        slot: 15
+        material: FEATHER
+        name: "&bПолёт игрока: {fly}"
+        lore:
+          - "&7Включить или выключить полёт"
+      gamemode:
+        enabled: true
+        slot: 16
+        material: DIAMOND_SWORD
+        name: "&dИгровой режим игрока"
+        lore:
+          - "&7Текущий: &f{gamemode}"
+          - "&eНажмите, чтобы выбрать режим"
+      back:
+        enabled: true
+        slot: 18
+        material: ARROW
+        name: "&e← Назад"
+        lore:
+          - "&7Вернуться к списку игроков"
+      close:
+        enabled: true
+        slot: 26
+        material: BARRIER
+        name: "&cЗакрыть"
+        lore: []
+
+  # ---------------------- Выбор игрового режима ----------------------
+  # Плейсхолдеры: {player}, {gamemode}
+  gamemode:
+    title: "&8Режим игры: &0{player}"
+    size: 27
+    filler:
+      enabled: true
+      material: GRAY_STAINED_GLASS_PANE
+    buttons:
+      survival:
+        enabled: true
+        slot: 10
+        material: IRON_SWORD
+        name: "&aВыживание"
+        lore:
+          - "&7Текущий режим: &f{gamemode}"
+      creative:
+        enabled: true
+        slot: 12
+        material: GRASS_BLOCK
+        name: "&eТворческий"
+        lore:
+          - "&7Текущий режим: &f{gamemode}"
+      adventure:
+        enabled: true
+        slot: 14
+        material: MAP
+        name: "&6Приключение"
+        lore:
+          - "&7Текущий режим: &f{gamemode}"
+      spectator:
+        enabled: true
+        slot: 16
+        material: ENDER_EYE
+        name: "&7Наблюдатель"
+        lore:
+          - "&7Текущий режим: &f{gamemode}"
+      back:
+        enabled: true
+        slot: 18
+        material: ARROW
+        name: "&e← Назад"
+        lore: []
+      close:
+        enabled: true
+        slot: 26
+        material: BARRIER
+        name: "&cЗакрыть"
+        lore: []
+
+# ----------------------------------------------------------------
+#  Серверные события
+#  ID события — ключ секции (латиница, цифры, "_" и "-").
+#  duration — длительность в секундах (1-604800).
+#  start-message / stop-message — строка или список строк, рассылаются всем.
+#  title / subtitle — необязательный титул при запуске.
+#  Плейсхолдеры: {id}, {name}, {duration}, {remaining}
+#  Плагин НЕ выполняет никаких консольных команд: другие плагины могут
+#  реагировать на ServerEventStartEvent / ServerEventStopEvent.
+# ----------------------------------------------------------------
+server-events:
+  double-xp:
+    name: "&aДвойной опыт"
+    duration: 900
+    start-message:
+      - "&8&m                                        "
+      - "&a&lСобытие «{name}&a&l» началось!"
+      - "&7Длительность: &f{duration}"
+      - "&8&m                                        "
+    stop-message: "&cСобытие «{name}&c» завершено. Спасибо за участие!"
+    title: "{name}"
+    subtitle: "&7Событие началось на &f{duration}"
+    bossbar:
+      enabled: true
+      text: "{name} &7— осталось &f{remaining}"
+      color: GREEN
+      style: SOLID
+  build-contest:
+    name: "&6Конкурс построек"
+    duration: 3600
+    start-message: "&6&lНачался конкурс построек! &7У вас есть &f{duration}&7."
+    stop-message: "&6Конкурс построек окончен! Результаты скоро объявят."
+    title: "&6Конкурс построек"
+    subtitle: "&7Время: &f{duration}"
+    bossbar:
+      enabled: true
+      text: "&6Конкурс построек &7— &f{remaining}"
+      color: YELLOW
+      style: SEGMENTED_10
+  pvp-hour:
+    name: "&cЧас PvP"
+    duration: 3600
+    start-message: "&c&lНачался час PvP! &7Будьте осторожны."
+    stop-message: "&cЧас PvP завершён."
+    bossbar:
+      enabled: false
+      text: "{name} &7— &f{remaining}"
+      color: RED
+      style: SOLID
+
+# ----------------------------------------------------------------
+#  Сообщения. {prefix} заменяется на значение prefix.
+#  Пустая строка "" отключает сообщение.
+# ----------------------------------------------------------------
+messages:
+  ru:
+    prefix: "&8[&4AdminPanel&8] &r"
+    no-permission: "{prefix}&cУ вас нет права &f{permission}&c."
+    players-only: "{prefix}&cОткрыть меню может только игрок. Используйте &f/{label} help&c."
+    unknown-subcommand: "{prefix}&cНеизвестная подкоманда. Используйте &f/{label} help&c."
+    help-header: "&8&m          &r &4&lAdminPanel &8&m          "
+    help-open: "&e/{label} &7— открыть панель администратора"
+    help-reload: "&e/{label} reload &7— перезагрузить конфигурацию"
+    help-event-start: "&e/{label} event start <id> &7— запустить серверное событие"
+    help-event-stop: "&e/{label} event stop &7— остановить активное событие"
+    help-event-list: "&e/{label} event list &7— список событий"
+    help-broadcast: "&e/{label} broadcast <текст> &7— объявление всем игрокам"
+    reload-success: "{prefix}&aКонфигурация перезагружена."
+    reload-warnings: "{prefix}&eКонфигурация перезагружена с предупреждениями: &f{count}&e. Подробности в консоли."
+    menu-cancelled: "{prefix}&cОткрытие меню отменено другим плагином."
+    action-cancelled: "{prefix}&cДействие отменено другим плагином."
+    player-offline: "{prefix}&cИгрок вышел с сервера."
+    teleport-self: "{prefix}&cНельзя телепортироваться к самому себе."
+    healed-self: "{prefix}&aЗдоровье восстановлено."
+    healed-target: "{prefix}&aВы восстановили здоровье игроку &f{target}&a."
+    healed-by-admin: "{prefix}&aАдминистратор &f{admin} &aвосстановил вам здоровье."
+    fed-self: "{prefix}&aГолод восстановлен."
+    fed-target: "{prefix}&aВы накормили игрока &f{target}&a."
+    fed-by-admin: "{prefix}&aАдминистратор &f{admin} &aнакормил вас."
+    fly-self: "{prefix}&7Полёт: {state}&7."
+    fly-target: "{prefix}&7Полёт игрока &f{target}&7: {state}&7."
+    fly-by-admin: "{prefix}&7Администратор &f{admin} &7изменил ваш полёт: {state}&7."
+    gamemode-self: "{prefix}&7Ваш игровой режим: &f{mode}&7."
+    gamemode-target: "{prefix}&7Режим игрока &f{target}&7: &f{mode}&7."
+    gamemode-by-admin: "{prefix}&7Администратор &f{admin} &7установил вам режим &f{mode}&7."
+    teleported-to: "{prefix}&aВы телепортировались к &f{target}&a."
+    teleported-here: "{prefix}&aИгрок &f{target} &aтелепортирован к вам."
+    teleported-by-admin: "{prefix}&7Администратор &f{admin} &7телепортировал вас к себе."
+    teleport-failed: "{prefix}&cНе удалось выполнить телепортацию."
+    time-day: "{prefix}&eУстановлен день в мирах: &f{worlds}&e."
+    time-night: "{prefix}&9Установлена ночь в мирах: &f{worlds}&9."
+    weather-clear: "{prefix}&bУстановлена ясная погода в мирах: &f{worlds}&b."
+    weather-rain: "{prefix}&3Включён дождь в мирах: &f{worlds}&3."
+    weather-thunder: "{prefix}&8Включена гроза в мирах: &f{worlds}&8."
+    world-not-found: "{prefix}&cМир &f{world} &cиз конфигурации не найден — пропущен."
+    no-worlds: "{prefix}&cНет доступных миров для применения настройки. Проверьте server-control.worlds."
+    broadcast-usage: "{prefix}&cИспользование: &f/{label} broadcast <текст>"
+    broadcast-format: "&8[&c&lОбъявление&8] &f{message}"
+    broadcast-sent: "{prefix}&aОбъявление отправлено."
+    event-usage: "{prefix}&cИспользование: &f/{label} event <start <id> | stop | list>"
+    event-start-usage: "{prefix}&cИспользование: &f/{label} event start <id>&c. Доступные события: &f{events}"
+    event-unknown: "{prefix}&cСобытие &f{id} &cне найдено. Доступные: &f{events}"
+    event-already-active: "{prefix}&cУже идёт событие &f{name}&c (осталось &f{remaining}&c). Сначала остановите его: &f/{label} event stop"
+    event-not-active: "{prefix}&cСейчас нет активного события."
+    event-started: "{prefix}&aСобытие &f{name} &aзапущено на &f{duration}&a."
+    event-stopped: "{prefix}&aСобытие &f{name} &aостановлено."
+    event-cancelled: "{prefix}&cЗапуск события отменён другим плагином."
+    event-list-header: "{prefix}&7Серверные события:"
+    event-list-entry: " &8• &f{id} &7— {name} &7(&f{duration}&7)"
+    event-list-active: " &8• &f{id} &7— {name} &a[идёт, осталось {remaining}]"
+    event-list-empty: "{prefix}&7В конфигурации нет серверных событий."
+    state-on: "&aвключён"
+    state-off: "&cвыключен"
+    gamemode-survival: "Выживание"
+    gamemode-creative: "Творческий"
+    gamemode-adventure: "Приключение"
+    gamemode-spectator: "Наблюдатель"
+    console-name: "Консоль"
+  en:
+    prefix: "&8[&4AdminPanel&8] &r"
+    no-permission: "{prefix}&cYou don't have permission &f{permission}&c."
+    players-only: "{prefix}&cOnly a player can open the menu. Use &f/{label} help&c."
+    unknown-subcommand: "{prefix}&cUnknown subcommand. Use &f/{label} help&c."
+    help-header: "&8&m          &r &4&lAdminPanel &8&m          "
+    help-open: "&e/{label} &7— open the admin panel"
+    help-reload: "&e/{label} reload &7— reload the configuration"
+    help-event-start: "&e/{label} event start <id> &7— start a server event"
+    help-event-stop: "&e/{label} event stop &7— stop the active event"
+    help-event-list: "&e/{label} event list &7— list server events"
+    help-broadcast: "&e/{label} broadcast <text> &7— broadcast a message"
+    reload-success: "{prefix}&aConfiguration reloaded."
+    reload-warnings: "{prefix}&eConfiguration reloaded with &f{count}&e warning(s). See console."
+    menu-cancelled: "{prefix}&cOpening the menu was cancelled by another plugin."
+    action-cancelled: "{prefix}&cThe action was cancelled by another plugin."
+    player-offline: "{prefix}&cThe player has left the server."
+    teleport-self: "{prefix}&cYou can't teleport to yourself."
+    healed-self: "{prefix}&aYou have been healed."
+    healed-target: "{prefix}&aYou healed &f{target}&a."
+    healed-by-admin: "{prefix}&aAdministrator &f{admin} &ahealed you."
+    fed-self: "{prefix}&aYour hunger has been restored."
+    fed-target: "{prefix}&aYou fed &f{target}&a."
+    fed-by-admin: "{prefix}&aAdministrator &f{admin} &afed you."
+    fly-self: "{prefix}&7Flight: {state}&7."
+    fly-target: "{prefix}&7Flight of &f{target}&7: {state}&7."
+    fly-by-admin: "{prefix}&7Administrator &f{admin} &7changed your flight: {state}&7."
+    gamemode-self: "{prefix}&7Your game mode: &f{mode}&7."
+    gamemode-target: "{prefix}&7Game mode of &f{target}&7: &f{mode}&7."
+    gamemode-by-admin: "{prefix}&7Administrator &f{admin} &7set your game mode to &f{mode}&7."
+    teleported-to: "{prefix}&aTeleported to &f{target}&a."
+    teleported-here: "{prefix}&a&f{target} &ahas been teleported to you."
+    teleported-by-admin: "{prefix}&7Administrator &f{admin} &7teleported you to them."
+    teleport-failed: "{prefix}&cTeleport failed."
+    time-day: "{prefix}&eDay set in worlds: &f{worlds}&e."
+    time-night: "{prefix}&9Night set in worlds: &f{worlds}&9."
+    weather-clear: "{prefix}&bClear weather set in worlds: &f{worlds}&b."
+    weather-rain: "{prefix}&3Rain started in worlds: &f{worlds}&3."
+    weather-thunder: "{prefix}&8Thunderstorm started in worlds: &f{worlds}&8."
+    world-not-found: "{prefix}&cWorld &f{world} &cfrom the config was not found — skipped."
+    no-worlds: "{prefix}&cNo worlds available. Check server-control.worlds."
+    broadcast-usage: "{prefix}&cUsage: &f/{label} broadcast <text>"
+    broadcast-format: "&8[&c&lAnnouncement&8] &f{message}"
+    broadcast-sent: "{prefix}&aAnnouncement sent."
+    event-usage: "{prefix}&cUsage: &f/{label} event <start <id> | stop | list>"
+    event-start-usage: "{prefix}&cUsage: &f/{label} event start <id>&c. Available events: &f{events}"
+    event-unknown: "{prefix}&cEvent &f{id} &cnot found. Available: &f{events}"
+    event-already-active: "{prefix}&cEvent &f{name} &cis already running (&f{remaining}&c left). Stop it first: &f/{label} event stop"
+    event-not-active: "{prefix}&cThere is no active event."
+    event-started: "{prefix}&aEvent &f{name} &astarted for &f{duration}&a."
+    event-stopped: "{prefix}&aEvent &f{name} &astopped."
+    event-cancelled: "{prefix}&cStarting the event was cancelled by another plugin."
+    event-list-header: "{prefix}&7Server events:"
+    event-list-entry: " &8• &f{id} &7— {name} &7(&f{duration}&7)"
+    event-list-active: " &8• &f{id} &7— {name} &a[running, {remaining} left]"
+    event-list-empty: "{prefix}&7No server events configured."
+    state-on: "&aenabled"
+    state-off: "&cdisabled"
+    gamemode-survival: "Survival"
+    gamemode-creative: "Creative"
+    gamemode-adventure: "Adventure"
+    gamemode-spectator: "Spectator"
+    console-name: "Console"
